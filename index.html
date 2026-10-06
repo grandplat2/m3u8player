@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple M3U8 Player</title>
+    <!-- Include hls.js from a CDN -->
+    <script src="https://jsdelivr.net"></script>
+</head>
+<body>
+
+    <h1>My HLS Video Player</h1>
+    
+    <!-- HTML5 Video Element -->
+    <video id="video" width="640" height="360" controls></video>
+
+    <script>
+        // Replace this with your actual m3u8 URL
+        var videoSrc = "https://mux.dev";
+        var video = document.getElementById('video');
+
+        // Hls.js is supported on most modern desktop browsers
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        } 
+        // Native support (Safari / iOS devices)
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+        }
+    </script>
+
+</body>
+</html>
