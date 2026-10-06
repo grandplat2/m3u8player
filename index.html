@@ -2,31 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple M3U8 Player</title>
-    <!-- Include hls.js from a CDN -->
-    <script src="https://jsdelivr.net"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic M3U8 Player</title>
+    <!-- Load hls.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; text-align: center; background: #121212; color: white; }
+        .controls { margin-bottom: 20px; }
+        input { width: 50%; padding: 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: white; }
+        button { padding: 10px 20px; border-radius: 4px; border: none; background: #007bff; color: white; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        video { background: #000; border: 1px solid #333; max-width: 100%; height: auto; }
+    </style>
 </head>
 <body>
 
-    <h1>My HLS Video Player</h1>
-    
-    <!-- HTML5 Video Element -->
-    <video id="video" width="640" height="360" controls></video>
+    <h2>M3U8 Stream Player</h2>
+
+    <!-- Input Controls -->
+    <div class="controls">
+        <input type="text" id="streamUrl" placeholder="Paste your .m3u8 URL here...">
+        <button onclick="loadStream()">Play</button>
+    </div>
+
+    <!-- Video Element -->
+    <video id="video" controls autoplay width="640" height="360"></video>
 
     <script>
-        // Replace this with your actual m3u8 URL
-        var videoSrc = "https://mux.dev";
         var video = document.getElementById('video');
+        var hls = null;
 
-        // Hls.js is supported on most modern desktop browsers
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-        } 
-        // Native support (Safari / iOS devices)
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
+        function loadStream() {
+            var videoSrc = document.getElementById('streamUrl').value.trim();
+            if (!videoSrc) {
+                alert('Please enter a valid URL.');
+                return;
+            }
+
+            // Destroy previous HLS instance if it exists to avoid overlapping streams
+            if (hls) {
+                hls.destroy();
+            }
+
+            // Play stream using hls.js
+            if (Hls.isSupported()) {
+                hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+            } 
+            // Fallback for native Safari HLS playback
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+            } else {
+                alert('Your browser does not support HLS streaming.');
+            }
         }
     </script>
 
