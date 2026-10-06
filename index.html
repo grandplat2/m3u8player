@@ -12,7 +12,14 @@
         input { width: 50%; padding: 10px; border-radius: 4px; border: 1px solid #444; background: #222; color: white; }
         button { padding: 10px 20px; border-radius: 4px; border: none; background: #007bff; color: white; cursor: pointer; font-weight: bold; }
         button:hover { background: #0056b3; }
-        video { background: #000; border: 1px solid #333; max-width: 100%; height: auto; }
+        video { background: #000; border: 1px solid #333; max-width: 100%; height: auto; margin-bottom: 30px; }
+        
+        /* Links and Text Section Styles */
+        .info-section { max-width: 640px; margin: 0 auto; text-align: left; padding: 0 10px; }
+        .info-group { margin-bottom: 24px; }
+        .info-link { font-size: 20px; font-weight: bold; color: #38bdf8; text-decoration: none; display: inline-block; margin-bottom: 6px; }
+        .info-link:hover { text-decoration: underline; }
+        .info-body { font-size: 15px; color: #b3b3b3; line-height: 1.5; margin: 0; }
     </style>
 </head>
 <body>
@@ -28,6 +35,23 @@
     <!-- Video Element -->
     <video id="video" controls autoplay width="640" height="360"></video>
 
+    <!-- Content Section Below Player -->
+    <div class="info-section">
+        
+        <!-- Group 1 -->
+        <div class="info-group">
+            <a href="https://example.com" target="_blank" class="info-link">Stream Provider Website</a>
+            <p class="info-body">ESPN: https://justkidding.junksonus.party/main/secure/6d33e82d284e5fa94bd347ce0875b9d2d2434d3ef9ade8c905c82a0966f7dc66/1791333003/espn-usa.m3u8</p>
+        </div>
+
+        <!-- Group 2 -->
+        <div class="info-group">
+            <a href="https://example.com" target="_blank" class="info-link">Troubleshooting & Documentation</a>
+            <p class="info-body">If your stream fails to load, ensure that the stream URL allows Cross-Origin Resource Sharing (CORS). You can find more networking fixes and standard stream setups in this document.</p>
+        </div>
+
+    </div>
+
     <script>
         var video = document.getElementById('video');
         var hls = null;
@@ -39,18 +63,15 @@
                 return;
             }
 
-            // Destroy previous HLS instance if it exists to avoid overlapping streams
             if (hls) {
                 hls.destroy();
             }
 
-            // Play stream using hls.js
             if (Hls.isSupported()) {
                 hls = new Hls();
                 hls.loadSource(videoSrc);
                 hls.attachMedia(video);
             } 
-            // Fallback for native Safari HLS playback
             else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = videoSrc;
             } else {
